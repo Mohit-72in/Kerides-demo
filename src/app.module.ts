@@ -8,7 +8,7 @@ import { DriverModule } from './driver/Driver.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb+srv://mohityadav950410s_db_user:nestStudent@cluster1.2krpsb0.mongodb.net/?appName=Cluster1'
+      // here paste mongo db atlas cluster string
     ),
     AuthModule,
     UserModule,
