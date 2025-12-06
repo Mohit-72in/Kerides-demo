@@ -1,0 +1,164 @@
+### ====================================================
+### GLOBAL VARIABLES
+### ====================================================
+@baseUrl = http://localhost:3000
+
+# --- User Credentials ---
+@userEmail = test_user_global@app.com
+@userPassword = secureUserPwd123
+
+# --- Driver Credentials ---
+@driverEmail = test_driver_global@app.com
+@driverPassword = secureDriverPwd123
+
+### ====================================================
+### 1. USER AUTHENTICATION & TOKEN CAPTURE
+### ====================================================
+
+### 1.1 User Signup
+POST {{baseUrl}}/users/signup
+Content-Type: application/json
+
+{
+    "name": "Global Test User",
+    "email": "{{userEmail}}",
+    "password": "{{userPassword}}"
+}
+
+###
+
+### 1.2 User Login (Capture JWT)
+# @name userLogin
+POST {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+    "email": "{{userEmail}}",
+    "password": "{{userPassword}}"
+}
+
+###
+
+### Extract user token from login response
+@userToken = {{userLogin.response.body.token}}
+@userToken = {{userLogin.response.body.token}}
+###
+
+### 1.3 Protected: Get User List
+GET {{baseUrl}}/users/userList
+x-Token: {{userToken}}
+
+###
+
+### 1.4 Unprotected: Get User Details
+GET {{baseUrl}}/users/userDetails/{{userEmail}}
+
+###
+
+### 1.5 Protected: Update User Profile
+PUT {{baseUrl}}/users/profile
+X-Token: {{userToken}}
+Content-Type: application/json
+
+{
+    "name": "Updated Global Test User",
+    "phone": "1234567890"
+}
+
+###
+
+### 1.6 Protected: User Logout
+POST {{baseUrl}}/users/logout
+X-Token: {{userToken}}
+
+###
+
+### ====================================================
+### 2. DRIVER AUTHENTICATION & TOKEN CAPTURE
+### ====================================================
+
+### 2.1 Driver Signup
+POST {{baseUrl}}/drivers/signup
+Content-Type: application/json
+
+{
+    "name": "Global Test Driver",
+    "email": "{{driverEmail}}",
+    "phone": 9991112220,
+    "password": "{{driverPassword}}",
+    "drivinglicenseNo": "DL-99988877",
+    "agreement": true
+}
+
+###
+
+### 2.2 Driver Login (Capture JWT)
+# @name driverLogin
+POST {{baseUrl}}/drivers/login
+Content-Type: application/json
+
+{
+    "email": "{{driverEmail}}",
+    "password": "{{driverPassword}}"
+}
+
+###
+
+### Extract driver token from login response
+@driverToken = {{driverLogin.response.body.token}}
+
+###
+
+### 2.3 Protected: Get Driver List
+GET {{baseUrl}}/drivers/list
+X-Token: {{driverToken}}
+
+###
+
+### 2.4 Protected: Get Driver Own Details
+GET {{baseUrl}}/drivers/details
+X-Token: {{driverToken}}
+
+###
+
+### 2.5 Protected: Update Driver Profile
+PUT {{baseUrl}}/drivers/profile
+X-Token: {{driverToken}}
+Content-Type: application/json
+
+{
+    "name": "Updated Global Test Driver",
+    "phone": 9991112221,
+    "vehicleType": "sedan",
+    "vehicleNumber": "ABC-1234"
+}
+
+###
+
+### 2.6 Protected: Driver Status Update (Set Available)
+PATCH {{baseUrl}}/drivers/status
+X-Token: {{driverToken}}
+Content-Type: application/json
+
+{
+    "status": "available"
+}
+
+###
+
+### 2.7 Protected: Driver Status Update (Set Busy)
+PATCH {{baseUrl}}/drivers/status
+X-Token: {{driverToken}}
+Content-Type: application/json
+
+{
+    "status": "busy"
+}
+
+###
+
+### 2.8 Protected: Driver Logout
+POST {{baseUrl}}/drivers/logout
+X-Token: {{driverToken}}
+
+###
