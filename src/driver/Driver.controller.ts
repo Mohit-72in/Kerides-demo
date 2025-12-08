@@ -13,7 +13,7 @@ import {
 import { DriverService } from '../driver/Driver.service';
 import { Driver } from '../schemas/Driver.schema'; // Corrected relative path
 import { AuthService } from 'src/auth/auth.service';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard'; // 💡 Using the Guard system
+import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // 💡 Using the Guard system
 
 @Controller('drivers') 
 export class DriverController {

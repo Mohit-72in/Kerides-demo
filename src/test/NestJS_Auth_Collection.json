@@ -1,0 +1,362 @@
+{
+	"info": {
+		"_postman_id": "0d619a9e-0d12-42e7-a068-07e4d8e7c10b",
+		"name": "NestJS All Modules (User, Driver, Vehicle)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User Authentication",
+			"item": [
+				{
+					"name": "1.1 User Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Global Test User\",\n    \"email\": \"{{userEmail}}\",\n    \"password\": \"{{userPassword}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/signup",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.2 User Login (Capture Token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"// Capture the token and store it in the environment variable",
+									"pm.environment.set(\"userToken\", jsonData.access_token);",
+									"console.log(\"User Token Captured: \" + jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{userEmail}}\",\n    \"password\": \"{{userPassword}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.3 Protected: Get User List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Token",
+								"value": "{{userToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/users/userList",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"userList"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "1.4 Unprotected: Get User Details by Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/userDetails/{{userEmail}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"userDetails",
+								"{{userEmail}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Driver & Vehicle Management",
+			"item": [
+				{
+					"name": "2.1 Driver Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Global Test Driver\",\n    \"email\": \"{{driverEmail}}\",\n    \"phone\": 9991112220,\n    \"password\": \"{{driverPassword}}\",\n    \"drivinglicenseNo\": \"DL-99988877\",\n    \"agreement\": true\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/drivers/signup",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"drivers",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.2 Driver Login (Capture Token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.expect(pm.response.code).to.be.oneOf([200]);",
+									"// Capture the token and store it in the environment variable",
+									"pm.environment.set(\"driverToken\", jsonData.access_token);",
+									"console.log(\"Driver Token Captured: \" + jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{driverEmail}}\",\n    \"password\": \"{{driverPassword}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/drivers/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"drivers",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.3 Protected: Get Driver List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Token",
+								"value": "{{driverToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/drivers/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"drivers",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.4 Protected: Get Driver Own Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Token",
+								"value": "{{driverToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/drivers/details",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"drivers",
+								"details"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.5 Protected: Register New Vehicle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.expect(pm.response.code).to.be.oneOf([201]);",
+									"// Capture the MongoDB ID of the newly created vehicle for update tests",
+									"pm.environment.set(\"vehicleId\", jsonData.vehicle._id);",
+									"console.log(\"Vehicle ID Captured: \" + jsonData.vehicle._id);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Token",
+								"value": "{{driverToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"make\": \"Toyota\",\n    \"vehicleModel\": \"Innova Crysta\",\n    \"year\": 2022,\n    \"seatsNo\": 7,\n    \"licensePlate\": \"MH12AB1234\",\n    \"vehicleClass\": \"SUV\",\n    \"vehicleType\": \"MPV\",\n    \"vehicleImages\": [\"http://img.com/innova1.jpg\"],\n    \"fareStructure\": {\n        \"minimumFare\": 100,\n        \"perKilometerRate\": 25,\n        \"waitingChargePerMinute\": 5,\n        \"cancellationFee\": 20\n    }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/vehicles",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"vehicles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.6 Protected: Get Vehicles by Driver (My List)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Token",
+								"value": "{{driverToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/vehicles/my-list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"vehicles",
+								"my-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.7 Protected: Update Vehicle (Uses captured ID)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-Token",
+								"value": "{{driverToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"seatsNo\": 6,\n    \"vehicleClass\": \"Premium SUV\",\n    \"fareStructure\": {\n        \"minimumFare\": 150,\n        \"perKilometerRate\": 30,\n        \"waitingChargePerMinute\": 6,\n        \"cancellationFee\": 20\n    }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/vehicles/{{vehicleId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"vehicles",
+								"{{vehicleId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.8 Public: Get All Vehicles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/vehicles",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"vehicles"
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"protocolProfileBehavior": {}
+}

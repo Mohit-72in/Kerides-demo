@@ -162,3 +162,25 @@ POST {{baseUrl}}/drivers/logout
 X-Token: {{driverToken}}
 
 ###
+
+### Update Driver's Phone and Name
+POST {{baseUrl}}/drivers/update
+Content-Type: application/json
+X-Token: {{driverToken}}
+
+{
+    "name": "Prakash Sharma",
+    "phone": 9998887770 
+}
+
+### Update Driver's Personal Info
+POST {{baseUrl}}/drivers/updatePersonalInfo
+Content-Type: application/json
+X-Token: {{driverToken}}
+
+{
+    "personalInfo": {
+        "city": "Mumbai",
+        "maritalStatus": "Single"
+    }
+}
