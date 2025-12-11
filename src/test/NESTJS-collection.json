@@ -1,0 +1,291 @@
+{
+  "info": {
+    "name": "NestJS Advanced Auth API",
+    "description": "Complete API testing collection for advance-auth-project",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/users/register",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["users", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/users/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["users", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicles",
+      "item": [
+        {
+          "name": "Get All Vehicles (Public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/vehicles",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["vehicles"]
+            }
+          }
+        },
+        {
+          "name": "Get My Vehicles (Protected)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-token",
+                "value": "{{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/vehicles/my-list",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["vehicles", "my-list"]
+            }
+          }
+        },
+        {
+          "name": "Create Vehicle (Protected)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-token",
+                "value": "{{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"make\": \"Toyota\",\n  \"vehicleModel\": \"Camry\",\n  \"year\": 2023,\n  \"seatsNo\": 5,\n  \"licensePlate\": \"ABC123\",\n  \"vehicleClass\": \"Sedan\",\n  \"vehicleType\": \"Car\",\n  \"vehicleImages\": [\n    \"https://example.com/image1.jpg\"\n  ],\n  \"documents\": {\n    \"Driving_Licence\": \"DL123456\",\n    \"Police_Clearance_Certificate\": \"PCC123\",\n    \"Proof_Of_Address\": \"POA123\",\n    \"Vehicle_Insurance_Proof\": \"VIP123\"\n  },\n  \"fareStructure\": {\n    \"minimumFare\": 50,\n    \"perKilometerRate\": 15,\n    \"waitingChargePerMinute\": 2,\n    \"cancellationFee\": 100\n  }\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/vehicles",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["vehicles"]
+            }
+          }
+        },
+        {
+          "name": "Update Vehicle (Protected)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-token",
+                "value": "{{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleModel\": \"Camry 2024\",\n  \"year\": 2024,\n  \"seatsNo\": 5,\n  \"fareStructure\": {\n    \"minimumFare\": 60,\n    \"perKilometerRate\": 16,\n    \"waitingChargePerMinute\": 2.5,\n    \"cancellationFee\": 120\n  }\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/vehicles/{{vehicle_id}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["vehicles", "{{vehicle_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Drivers",
+      "item": [
+        {
+          "name": "Get All Drivers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/driver",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["driver"]
+            }
+          }
+        },
+        {
+          "name": "Get Driver By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/driver/{{driver_id}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["driver", "{{driver_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Create Driver (Protected)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-token",
+                "value": "{{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"licenseNumber\": \"DL123456\",\n  \"licenseExpiry\": \"2025-12-31\",\n  \"yearsOfExperience\": 5,\n  \"backgroundCheckStatus\": \"Approved\",\n  \"documents\": {\n    \"Driving_Licence\": \"DL123456\",\n    \"Police_Clearance_Certificate\": \"PCC123\"\n  }\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/driver",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["driver"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/users",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/users/{{user_id}}",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["users", "{{user_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User (Protected)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "x-token",
+                "value": "{{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/users/profile",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["users", "profile"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "vehicle_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "driver_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

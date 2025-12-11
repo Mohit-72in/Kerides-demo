@@ -1,5 +1,4 @@
-// src/auth/auth.constants.ts
-/* eslint-disable prettier/prettier */
 export const authConstants = {
-  secret: "HAD_12X#@", // Your new secret
+  secret: process.env.JWT_SECRET || 'your-secret-key',
+  expiresIn: (process.env.JWT_EXPIRY || '7d') as string,
 };

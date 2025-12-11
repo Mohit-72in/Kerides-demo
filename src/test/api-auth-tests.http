@@ -10,13 +10,14 @@
 # --- Driver Credentials ---
 @driverEmail = test_driver_global@app.com
 @driverPassword = secureDriverPwd123
+@vehicleId = 
 
 ### ====================================================
-### 1. USER AUTHENTICATION & TOKEN CAPTURE
+### 1. USER AUTHENTICATION & PROFILE
 ### ====================================================
 
-### 1.1 User Signup
-POST {{baseUrl}}/users/signup
+### 1.1 User Signup (CENTRALIZED)
+POST {{baseUrl}}/auth/user/signup
 Content-Type: application/json
 
 {
@@ -27,9 +28,9 @@ Content-Type: application/json
 
 ###
 
-### 1.2 User Login (Capture JWT)
+### 1.2 User Login (Capture JWT) (CENTRALIZED)
 # @name userLogin
-POST {{baseUrl}}/users/login
+POST {{baseUrl}}/auth/user/login
 Content-Type: application/json
 
 {
@@ -40,45 +41,41 @@ Content-Type: application/json
 ###
 
 ### Extract user token from login response
-@userToken = {{userLogin.response.body.token}}
-@userToken = {{userLogin.response.body.token}}
-###
+@userToken = {{userLogin.response.body.access_token}}
 
-### 1.3 Protected: Get User List
+### 1.3 Protected: Get User List (Retrieval)
 GET {{baseUrl}}/users/userList
-x-Token: {{userToken}}
+X-Token: {{userToken}}
 
 ###
 
-### 1.4 Unprotected: Get User Details
+### 1.4 Unprotected: Get User Details by Email
 GET {{baseUrl}}/users/userDetails/{{userEmail}}
 
 ###
 
-### 1.5 Protected: Update User Profile
-PUT {{baseUrl}}/users/profile
+### 1.5 Protected: Update User Profile (User Controller route)
+POST {{baseUrl}}/users/update
 X-Token: {{userToken}}
 Content-Type: application/json
 
 {
     "name": "Updated Global Test User",
-    "phone": "1234567890"
+    "email": "updated_test_user_global@app.com"
 }
+# NOTE: Removed phone field as it's not in CreateUserDto.
 
 ###
 
-### 1.6 Protected: User Logout
-POST {{baseUrl}}/users/logout
-X-Token: {{userToken}}
+### 1.6 User Logout (REMOVED - No endpoint implemented)
 
-###
 
 ### ====================================================
-### 2. DRIVER AUTHENTICATION & TOKEN CAPTURE
+### 2. DRIVER AUTHENTICATION & PROFILE
 ### ====================================================
 
-### 2.1 Driver Signup
-POST {{baseUrl}}/drivers/signup
+### 2.1 Driver Signup (CENTRALIZED)
+POST {{baseUrl}}/auth/driver/signup
 Content-Type: application/json
 
 {
@@ -92,9 +89,9 @@ Content-Type: application/json
 
 ###
 
-### 2.2 Driver Login (Capture JWT)
+### 2.2 Driver Login (Capture JWT) (CENTRALIZED)
 # @name driverLogin
-POST {{baseUrl}}/drivers/login
+POST {{baseUrl}}/auth/driver/login
 Content-Type: application/json
 
 {
@@ -105,7 +102,7 @@ Content-Type: application/json
 ###
 
 ### Extract driver token from login response
-@driverToken = {{driverLogin.response.body.token}}
+@driverToken = {{driverLogin.response.body.access_token}}
 
 ###
 
@@ -115,68 +112,28 @@ X-Token: {{driverToken}}
 
 ###
 
-### 2.4 Protected: Get Driver Own Details
+### 2.4 Protected: Get Driver Own Details (Profile retrieval)
 GET {{baseUrl}}/drivers/details
 X-Token: {{driverToken}}
 
 ###
 
-### 2.5 Protected: Update Driver Profile
-PUT {{baseUrl}}/drivers/profile
-X-Token: {{driverToken}}
-Content-Type: application/json
-
-{
-    "name": "Updated Global Test Driver",
-    "phone": 9991112221,
-    "vehicleType": "sedan",
-    "vehicleNumber": "ABC-1234"
-}
-
-###
-
-### 2.6 Protected: Driver Status Update (Set Available)
-PATCH {{baseUrl}}/drivers/status
-X-Token: {{driverToken}}
-Content-Type: application/json
-
-{
-    "status": "available"
-}
-
-###
-
-### 2.7 Protected: Driver Status Update (Set Busy)
-PATCH {{baseUrl}}/drivers/status
-X-Token: {{driverToken}}
-Content-Type: application/json
-
-{
-    "status": "busy"
-}
-
-###
-
-### 2.8 Protected: Driver Logout
-POST {{baseUrl}}/drivers/logout
-X-Token: {{driverToken}}
-
-###
-
-### Update Driver's Phone and Name
+### 2.5 Protected: Update Driver Profile (Name/Phone Update)
 POST {{baseUrl}}/drivers/update
-Content-Type: application/json
 X-Token: {{driverToken}}
+Content-Type: application/json
 
 {
     "name": "Prakash Sharma",
     "phone": 9998887770 
 }
 
-### Update Driver's Personal Info
+###
+
+### 2.6 Protected: Update Driver's Personal Info (Nested data)
 POST {{baseUrl}}/drivers/updatePersonalInfo
-Content-Type: application/json
 X-Token: {{driverToken}}
+Content-Type: application/json
 
 {
     "personalInfo": {
@@ -184,3 +141,66 @@ X-Token: {{driverToken}}
         "maritalStatus": "Single"
     }
 }
+
+### 2.7 Driver Logout (REMOVED - No endpoint implemented)
+
+
+### ====================================================
+### 3. VEHICLE MANAGEMENT (NEW MODULE TEST)
+### ====================================================
+# NOTE: This section is CRUCIAL to verify the new module.
+
+### 3.1 Protected: Register New Vehicle (Capture vehicleId)
+# @name registerVehicle
+POST {{baseUrl}}/vehicles
+X-Token: {{driverToken}}
+Content-Type: application/json
+
+{
+    "make": "Toyota",
+    "vehicleModel": "Innova",
+    "year": 2021,
+    "seatsNo": 6,
+    "licensePlate": "MH12AC{{$randomInt}}", 
+    "vehicleClass": "SUV",
+    "vehicleType": "premium",
+    "fareStructure": {
+        "minimumFare": 100,
+        "perKilometerRate": 15,
+        "waitingChargePerMinute": 2,
+        "cancellationFee": 50
+    }
+}
+# Note: Use $randomInt to ensure unique licensePlate for testing
+
+### Extract vehicle ID from creation response
+@vehicleId = {{registerVehicle.response.body.vehicle._id}}
+
+###
+
+### 3.2 Protected: Update Vehicle Details  693a657737c506704ab707f2
+ PUT {{baseUrl}}/vehicles/{{vehicleId}}
+
+
+X-Token: {{driverToken}}
+Content-Type: application/json
+
+{
+    "fareStructure": {
+        "minimumFare": 120,
+        "perKilometerRate": 18,
+        "waitingChargePerMinute": 3,
+        "cancellationFee": 60
+    }
+}
+
+###
+
+### 3.3 Protected: Get Driver's Vehicle List
+GET {{baseUrl}}/vehicles/my-list
+X-Token: {{driverToken}}
+
+###
+
+### 3.4 Public: Get All Vehicles List
+GET {{baseUrl}}/vehicles

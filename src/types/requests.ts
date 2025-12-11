@@ -1,16 +1,18 @@
-// src/types/requests.ts
-/* eslint-disable prettier/prettier */
-import { Request } from 'express';
+// src/types/requests.ts (FINAL CORRECTED DEFINITION)
 
-// Define the structure of the payload attached by JwtStrategy
-interface JwtPayload {
-    userId: string; // Corresponds to 'sub' in your JWT payload
+import { Request } from 'express'; // 1. Import the base Express Request
+
+// 2. Define the structure placed on the request by JwtStrategy
+// Note: This matches what you return in jwt.strategy.ts:
+// { userId: payload.sub, email: payload.email, userType: payload.userType }
+export interface AuthenticatedUser {
+    userId: string;
     email: string;
-    // Add 'type: string' if you included { type: 'driver' } in the JWT
-    type?: string; 
+    // 💡 Must match the corrected property name used in the JWT payload
+    userType: 'user' | 'driver'; 
 }
 
-// Extend the Express Request interface with our custom 'user' property
+// 3. Extend the Express Request interface
 export interface AuthenticatedRequest extends Request {
-    user: JwtPayload;
+    user: AuthenticatedUser;
 }
